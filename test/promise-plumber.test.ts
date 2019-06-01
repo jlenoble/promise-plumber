@@ -1,4 +1,5 @@
 import { expect } from "chai";
+import delayed from "../src/base/delayed";
 
 const testSuite = (Promise: PromiseConstructor): void => {
   describe(`Testing ${Promise.name}`, (): void => {
@@ -63,6 +64,7 @@ const testSuite = (Promise: PromiseConstructor): void => {
 
       const p = new Promise(
         (resolve, reject): void => {
+          resolve; // Hack to get rid of "value never read" ts warning
           reject(e);
         }
       );
@@ -81,3 +83,4 @@ const testSuite = (Promise: PromiseConstructor): void => {
 };
 
 testSuite(Promise);
+testSuite(delayed(Promise.resolve(42)));
