@@ -1,8 +1,8 @@
 import { expect } from "chai";
-import delayed from "../src/base/delayed";
+import gate from "../src/base/gate";
 
 const testSuite = (Promise: PromiseConstructor): void => {
-  describe(`Testing ${Promise.name}`, (): void => {
+  describe(`Testing Promise interface of ${Promise.name}`, (): void => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const args: any[] = [null, 1, false, undefined, {}, [], "foo"];
 
@@ -82,5 +82,13 @@ const testSuite = (Promise: PromiseConstructor): void => {
   });
 };
 
+const delay = (n: number): Promise<void> => {
+  return new Promise(
+    (resolve): void => {
+      setTimeout(resolve, n);
+    }
+  );
+};
+
 testSuite(Promise);
-testSuite(delayed(Promise.resolve(42)));
+testSuite(gate(delay(100)));
