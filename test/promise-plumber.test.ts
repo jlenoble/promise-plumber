@@ -1,5 +1,6 @@
 import { expect } from "chai";
 import gate from "../src/base/gate";
+import delay from "./helpers/delay";
 
 const testSuite = (Promise: PromiseConstructor): void => {
   describe(`Testing Promise interface of ${Promise.name}`, (): void => {
@@ -80,14 +81,6 @@ const testSuite = (Promise: PromiseConstructor): void => {
       expect(hasThrown).to.be.true;
     });
   });
-};
-
-const delay = (n: number): Promise<void> => {
-  return new Promise(
-    (resolve): void => {
-      setTimeout(resolve, n);
-    }
-  );
 };
 
 testSuite(Promise);
