@@ -2,7 +2,7 @@
 const immediate = (value?: any): Promise<void> => {
   return new Promise(
     (resolve): void => {
-      setImmediate(resolve, value);
+      setImmediate(resolve, typeof value === "function" ? value() : value);
     }
   );
 };
