@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import delay from "../helpers/delay";
-import { repeatUntil } from "../helpers/repeat";
+import { repeatUntil } from "../../src/helpers/repeat";
 import immediate from "../helpers/immediate";
 import LooseObject from "../helpers/loose-object";
 
