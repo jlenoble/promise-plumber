@@ -75,7 +75,7 @@
     "gulp-wrap": "^0.15.0",
     "markdown-include": "^0.4.3",
     "mocha": "<6",
-    "mochawesome": "^3.1.2",
+    "mochawesome": "^4.0.0",
     "plumb-gulp": "^0.2.2",
     "prettier": "^1.17.1",
     "source-map-support": "^0.5.12",
