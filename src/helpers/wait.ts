@@ -1,5 +1,5 @@
 export const waitUntil = (
-  stopFn: Function,
+  stopFn: () => boolean,
   every: number = 0
 ): Promise<void> => {
   return new Promise(
