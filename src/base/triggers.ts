@@ -6,7 +6,7 @@ import {
   decisionExecutor
 } from "./trigger-executors";
 
-export default class Trigger<T> extends Promise<T> {
+export class Trigger<T> extends Promise<T> {
   private _state: ResolvableState<T>;
 
   public constructor(executor?: Executor<T>) {
