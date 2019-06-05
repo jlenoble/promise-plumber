@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import Trigger, { CancelTrigger } from "../../src/base/trigger";
+import Trigger, { Canceller } from "../../src/base/trigger";
 import { repeatN } from "../../src/helpers/repeat";
 
 export const resolvableTest = (): ReturnType<typeof it> =>
@@ -54,8 +54,8 @@ export const triggeringTest = (): ReturnType<typeof it> =>
   });
 
 export const rejectableTest = (): ReturnType<typeof it> =>
-  it("Testing a CancelTrigger", async (): Promise<void> => {
-    const trigger = new CancelTrigger();
+  it("Testing a Canceller", async (): Promise<void> => {
+    const trigger = new Canceller();
 
     trigger.reject(new Error("Error 1"));
     trigger.reject(new Error("Error 2"));

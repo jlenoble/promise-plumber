@@ -26,11 +26,11 @@ export default class Trigger<T> extends Promise<T> {
   }
 }
 
-export class CancelTrigger<T> extends Promise<T> {
+export class Canceller<T> extends Promise<T> {
   private _state: ResolvableState<T>;
 
   public constructor(executor?: Executor<T>) {
-    // CancelTrigger is instanciated without any argument normally but in async
+    // Canceller is instanciated without any argument normally but in async
     // functions, awaiting an instance will call this ctor again. We have to
     // guard against starting implicitly infinite loops, which we do by checking
     // on the existence of executor.
