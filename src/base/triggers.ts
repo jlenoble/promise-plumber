@@ -7,7 +7,7 @@ import {
 } from "./trigger-executors";
 
 export class Trigger<T> extends Promise<T> {
-  private _state: ResolvableState<T>;
+  private readonly _state: ResolvableState<T>;
 
   public constructor(executor?: Executor<T>) {
     // Trigger is instanciated without any argument normally but in async
@@ -17,23 +17,38 @@ export class Trigger<T> extends Promise<T> {
     if (executor) {
       super(executor);
       this._state = { done: true };
+      Object.freeze(this._state);
     } else {
-      const state: ResolvableState<T> = { done: false };
+      const state: ResolvableState<T> = {
+        done: false,
+        value: undefined,
+        reason: undefined
+      };
+      Object.seal(state);
       super(resolutionExecutor(state));
       this._state = state;
     }
+
+    Object.defineProperty(this, "_state", {
+      writable: false,
+      enumerable: false,
+      configurable: false
+    });
+
+    Object.freeze(this);
   }
 
   public resolve(value?: T | PromiseLike<T>): void {
     if (!this._state.done) {
       this._state.value = value;
       this._state.done = true;
+      Object.freeze(this._state);
     }
   }
 }
 
 export class Canceller<T> extends Promise<T> {
-  private _state: ResolvableState<T>;
+  private readonly _state: ResolvableState<T>;
 
   public constructor(executor?: Executor<T>) {
     // Canceller is instanciated without any argument normally but in async
@@ -43,11 +58,25 @@ export class Canceller<T> extends Promise<T> {
     if (executor) {
       super(executor);
       this._state = { done: true };
+      Object.freeze(this._state);
     } else {
-      const state: ResolvableState<T> = { done: false };
+      const state: ResolvableState<T> = {
+        done: false,
+        value: undefined,
+        reason: undefined
+      };
+      Object.seal(state);
       super(rejectionExecutor(state));
       this._state = state;
     }
+
+    Object.defineProperty(this, "_state", {
+      writable: false,
+      enumerable: false,
+      configurable: false
+    });
+
+    Object.freeze(this);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -55,12 +84,13 @@ export class Canceller<T> extends Promise<T> {
     if (!this._state.done) {
       this._state.reason = reason;
       this._state.done = true;
+      Object.freeze(this._state);
     }
   }
 }
 
 export class DecisionMaker<T> extends Promise<T> {
-  private _state: ResolvableState<T>;
+  private readonly _state: ResolvableState<T>;
 
   public constructor(executor?: Executor<T>) {
     // DecisionMaker is instanciated without any argument normally but in async
@@ -70,17 +100,32 @@ export class DecisionMaker<T> extends Promise<T> {
     if (executor) {
       super(executor);
       this._state = { done: true };
+      Object.freeze(this._state);
     } else {
-      const state: ResolvableState<T> = { done: false };
+      const state: ResolvableState<T> = {
+        done: false,
+        value: undefined,
+        reason: undefined
+      };
+      Object.seal(state);
       super(decisionExecutor(state));
       this._state = state;
     }
+
+    Object.defineProperty(this, "_state", {
+      writable: false,
+      enumerable: false,
+      configurable: false
+    });
+
+    Object.freeze(this);
   }
 
   public resolve(value?: T | PromiseLike<T>): void {
     if (!this._state.done) {
       this._state.value = value;
       this._state.done = true;
+      Object.freeze(this._state);
     }
   }
 
@@ -89,6 +134,7 @@ export class DecisionMaker<T> extends Promise<T> {
     if (!this._state.done) {
       this._state.reason = reason;
       this._state.done = true;
+      Object.freeze(this._state);
     }
   }
 }
