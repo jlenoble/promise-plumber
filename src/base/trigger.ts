@@ -14,9 +14,14 @@ export default class Trigger<T> extends Promise<T> {
     // functions, awaiting an instance will call this ctor again. We have to
     // guard against starting implicitly infinite loops, which we do by checking
     // on the existence of executor.
-    const state: ResolvableState<T> = { done: !!executor };
-    super(executor || resolutionExecutor(state));
-    this._state = state;
+    if (executor) {
+      super(executor);
+      this._state = { done: true };
+    } else {
+      const state: ResolvableState<T> = { done: false };
+      super(resolutionExecutor(state));
+      this._state = state;
+    }
   }
 
   public resolve(value?: T | PromiseLike<T>): void {
@@ -35,9 +40,14 @@ export class Canceller<T> extends Promise<T> {
     // functions, awaiting an instance will call this ctor again. We have to
     // guard against starting implicitly infinite loops, which we do by checking
     // on the existence of executor.
-    const state: ResolvableState<T> = { done: !!executor };
-    super(executor || rejectionExecutor(state));
-    this._state = state;
+    if (executor) {
+      super(executor);
+      this._state = { done: true };
+    } else {
+      const state: ResolvableState<T> = { done: false };
+      super(rejectionExecutor(state));
+      this._state = state;
+    }
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -57,9 +67,14 @@ export class DecisionMaker<T> extends Promise<T> {
     // functions, awaiting an instance will call this ctor again. We have to
     // guard against starting implicitly infinite loops, which we do by checking
     // on the existence of executor.
-    const state: ResolvableState<T> = { done: !!executor };
-    super(executor || decisionExecutor(state));
-    this._state = state;
+    if (executor) {
+      super(executor);
+      this._state = { done: true };
+    } else {
+      const state: ResolvableState<T> = { done: false };
+      super(decisionExecutor(state));
+      this._state = state;
+    }
   }
 
   public resolve(value?: T | PromiseLike<T>): void {
