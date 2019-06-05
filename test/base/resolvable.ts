@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import Trigger, { Canceller, DecisionMaker } from "../../src/base/trigger";
+import Trigger, { Canceller, DecisionMaker } from "../../src/base/triggers";
 import { repeatN } from "../../src/helpers/repeat";
 
 export const resolvableTest = (): ReturnType<typeof it> =>
