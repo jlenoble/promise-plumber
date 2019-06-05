@@ -1,5 +1,5 @@
 import { Executor } from "./executor";
-import { repeatUntil } from "../helpers/repeat";
+import { waitForDone } from "../helpers/wait";
 
 export interface ResolvableState<T> {
   done: boolean;
@@ -12,9 +12,7 @@ export function resolutionExecutor<T>(
 ): Executor<T> {
   return (resolve, reject): void => {
     const _resolve = (): void => {
-      repeatUntil((): void => {}, (): boolean => state.done).then(
-        (): void => resolve(state.value)
-      );
+      waitForDone(state).then((): void => resolve(state.value));
     };
 
     executor(_resolve, reject);
@@ -27,9 +25,7 @@ export function rejectionExecutor<T>(
 ): Executor<T> {
   return (resolve, reject): void => {
     const _reject = (): void => {
-      repeatUntil((): void => {}, (): boolean => state.done).then(
-        (): void => reject(state.value)
-      );
+      waitForDone(state).then((): void => reject(state.value));
     };
 
     executor(resolve, _reject);
