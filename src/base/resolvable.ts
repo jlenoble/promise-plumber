@@ -7,7 +7,7 @@ export interface ResolvableState<T> {
   reason?: any; // eslint-disable-line @typescript-eslint/no-explicit-any
 }
 
-export function resolutionExecutor<T>(
+export function genericResolutionExecutor<T>(
   executor: Executor<T>,
   state: ResolvableState<T>
 ): Executor<T> {
@@ -20,7 +20,7 @@ export function resolutionExecutor<T>(
   };
 }
 
-export function rejectionExecutor<T>(
+export function genericRejectionExecutor<T>(
   executor: Executor<T>,
   state: ResolvableState<T>
 ): Executor<T> {
@@ -33,7 +33,7 @@ export function rejectionExecutor<T>(
   };
 }
 
-export function decisionExecutor<T>(
+export function genericDecisionExecutor<T>(
   executor: Executor<T>,
   state: ResolvableState<T>
 ): Executor<T> {
@@ -41,15 +41,35 @@ export function decisionExecutor<T>(
     const _resolve = (): void => {
       waitForDone(state).then(
         (): void => {
-          if (state.reason) {
-            reject(state.reason);
-          } else {
-            resolve(state.value);
-          }
+          if (state.reason) reject(state.reason);
+          else resolve(state.value);
         }
       );
     };
 
     executor(_resolve, _resolve);
+  };
+}
+
+export function resolutionExecutor<T>(state: ResolvableState<T>): Executor<T> {
+  return (resolve): void => {
+    waitForDone(state).then((): void => resolve(state.value));
+  };
+}
+
+export function rejectionExecutor<T>(state: ResolvableState<T>): Executor<T> {
+  return (resolve, reject): void => {
+    waitForDone(state).then((): void => reject(state.reason));
+  };
+}
+
+export function decisionExecutor<T>(state: ResolvableState<T>): Executor<T> {
+  return (resolve, reject): void => {
+    waitForDone(state).then(
+      (): void => {
+        if (state.reason) reject(state.reason);
+        else resolve(state.value);
+      }
+    );
   };
 }

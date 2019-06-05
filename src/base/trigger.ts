@@ -15,7 +15,7 @@ export default class Trigger<T> extends Promise<T> {
     // guard against starting implicitly infinite loops, which we do by checking
     // on the existence of executor.
     const state: ResolvableState<T> = { done: !!executor };
-    super(executor || resolutionExecutor((resolve): void => resolve(), state));
+    super(executor || resolutionExecutor(state));
     this._state = state;
   }
 
@@ -36,9 +36,7 @@ export class Canceller<T> extends Promise<T> {
     // guard against starting implicitly infinite loops, which we do by checking
     // on the existence of executor.
     const state: ResolvableState<T> = { done: !!executor };
-    super(
-      executor || rejectionExecutor((resolve, reject): void => reject(), state)
-    );
+    super(executor || rejectionExecutor(state));
     this._state = state;
   }
 
@@ -60,7 +58,7 @@ export class DecisionMaker<T> extends Promise<T> {
     // guard against starting implicitly infinite loops, which we do by checking
     // on the existence of executor.
     const state: ResolvableState<T> = { done: !!executor };
-    super(executor || decisionExecutor((resolve): void => resolve(), state));
+    super(executor || decisionExecutor(state));
     this._state = state;
   }
 
