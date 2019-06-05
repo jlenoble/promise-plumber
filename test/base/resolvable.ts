@@ -68,3 +68,45 @@ export const rejectableTest = (): ReturnType<typeof it> =>
       expect(e.message).to.equal("Error 1");
     }
   });
+
+export const cancellingTest = (): ReturnType<typeof it> =>
+  it("Cancelling promises", async (): Promise<void> => {
+    const trigger = new Canceller();
+
+    const p1 = trigger.then((): number => 1, (): number => 4);
+    const p2 = trigger.then((): number => 2, (): number => 5);
+    const p3 = trigger.then((): number => 3, (): number => 6);
+
+    const p = Promise.all([p1, p2, p3]);
+    let counter = 5;
+
+    const r = repeatN(async (): Promise<number[]> => {
+      counter--;
+      return p;
+    }, counter);
+
+    try {
+      expect(counter).to.equal(5);
+
+      trigger.reject(new Error("rejected"));
+      expect(counter).to.equal(5);
+
+      try {
+        await trigger;
+      } catch (e) {
+        expect(e.message).to.equal("rejected");
+        expect(counter).not.to.equal(0);
+      }
+
+      expect(await p).to.eql([4, 5, 6]);
+      expect(counter).not.to.equal(0);
+
+      expect(await r).to.eql([4, 5, 6]);
+      expect(counter).to.equal(0);
+    } catch (e) {
+      await r;
+      throw e;
+    }
+
+    return r;
+  });
