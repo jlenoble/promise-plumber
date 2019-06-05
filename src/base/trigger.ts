@@ -1,8 +1,8 @@
 import { Executor } from "./executor";
 import {
   ResolvableState,
-  resolvingExecutor,
-  rejectingExecutor
+  resolutionExecutor,
+  rejectionExecutor
 } from "./resolvable";
 
 export default class Trigger<T> extends Promise<T> {
@@ -14,7 +14,7 @@ export default class Trigger<T> extends Promise<T> {
     // guard against starting implicitly infinite loops, which we do by checking
     // on the existence of executor.
     const state: ResolvableState<T> = { done: !!executor };
-    super(executor || resolvingExecutor((resolve): void => resolve(), state));
+    super(executor || resolutionExecutor((resolve): void => resolve(), state));
     this._state = state;
   }
 
@@ -36,7 +36,7 @@ export class CancelTrigger<T> extends Promise<T> {
     // on the existence of executor.
     const state: ResolvableState<T> = { done: !!executor };
     super(
-      executor || rejectingExecutor((resolve, reject): void => reject(), state)
+      executor || rejectionExecutor((resolve, reject): void => reject(), state)
     );
     this._state = state;
   }

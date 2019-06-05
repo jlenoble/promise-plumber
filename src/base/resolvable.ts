@@ -6,7 +6,7 @@ export interface ResolvableState<T> {
   value?: T | PromiseLike<T>;
 }
 
-export function resolvingExecutor<T>(
+export function resolutionExecutor<T>(
   executor: Executor<T>,
   state: ResolvableState<T>
 ): Executor<T> {
@@ -21,7 +21,7 @@ export function resolvingExecutor<T>(
   };
 }
 
-export function rejectingExecutor<T>(
+export function rejectionExecutor<T>(
   executor: Executor<T>,
   state: ResolvableState<T>
 ): Executor<T> {
