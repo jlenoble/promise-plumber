@@ -32,3 +32,24 @@ export function rejectionExecutor<T>(
     executor(resolve, _reject);
   };
 }
+
+export function decisionExecutor<T>(
+  executor: Executor<T>,
+  state: ResolvableState<T>
+): Executor<T> {
+  return (resolve, reject): void => {
+    const _resolve = (): void => {
+      waitForDone(state).then(
+        (): void => {
+          if (state.reason) {
+            reject(state.reason);
+          } else {
+            resolve(state.value);
+          }
+        }
+      );
+    };
+
+    executor(_resolve, _resolve);
+  };
+}

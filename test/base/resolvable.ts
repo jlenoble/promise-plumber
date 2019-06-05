@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import Trigger, { Canceller } from "../../src/base/trigger";
+import Trigger, { Canceller, DecisionMaker } from "../../src/base/trigger";
 import { repeatN } from "../../src/helpers/repeat";
 
 export const resolvableTest = (): ReturnType<typeof it> =>
@@ -109,4 +109,30 @@ export const cancellingTest = (): ReturnType<typeof it> =>
     }
 
     return r;
+  });
+
+export const decisionTest = (): ReturnType<typeof it> =>
+  it("Testing a DecisionMaker", async (): Promise<void> => {
+    const trigger1 = new DecisionMaker();
+
+    trigger1.resolve(1);
+    trigger1.resolve(2);
+    trigger1.resolve(3);
+
+    const result1 = await trigger1;
+
+    expect(result1).to.equal(1);
+
+    const trigger2 = new DecisionMaker();
+
+    trigger2.reject(new Error("Error 1"));
+    trigger2.reject(new Error("Error 2"));
+    trigger2.reject(new Error("Error 3"));
+
+    try {
+      await trigger2;
+      throw new Error("Error 4");
+    } catch (e) {
+      expect(e.message).to.equal("Error 1");
+    }
   });

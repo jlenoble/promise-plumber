@@ -2,7 +2,8 @@ import {
   resolvableTest,
   rejectableTest,
   triggeringTest,
-  cancellingTest
+  cancellingTest,
+  decisionTest
 } from "./resolvable";
 
 describe("Testing various constructs with custom Promises", (): void => {
@@ -10,4 +11,5 @@ describe("Testing various constructs with custom Promises", (): void => {
   rejectableTest();
   triggeringTest();
   cancellingTest();
+  decisionTest();
 });
