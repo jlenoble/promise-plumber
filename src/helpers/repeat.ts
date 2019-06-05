@@ -1,6 +1,11 @@
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type BoundFunction = () => any;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type SieveFunction = (arg: any) => boolean;
+
 export const repeatUntil = (
-  fn: Function,
-  stopFn: Function,
+  fn: BoundFunction,
+  stopFn: SieveFunction,
   every: number = 0
 ): Promise<void> => {
   return new Promise(
@@ -28,9 +33,8 @@ export const repeatUntil = (
 };
 
 export const repeatUntilEqual = (
-  fn: Function,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  stopValue: Exclude<any, Function>,
+  fn: BoundFunction,
+  stopValue: SieveFunction,
   every: number = 0
 ): Promise<void> => {
   return new Promise(
@@ -58,7 +62,7 @@ export const repeatUntilEqual = (
 };
 
 export const repeatFor = (
-  fn: Function,
+  fn: BoundFunction,
   timeout: number,
   every: number = 0
 ): Promise<void> => {
@@ -85,7 +89,7 @@ export const repeatFor = (
 };
 
 export const repeatN = (
-  fn: Function,
+  fn: BoundFunction,
   n: number,
   every: number = 0
 ): Promise<void> => {
