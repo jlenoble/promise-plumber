@@ -4,7 +4,7 @@ import {
   resolutionExecutor,
   rejectionExecutor,
   decisionExecutor
-} from "./resolvable";
+} from "./trigger-executors";
 
 export default class Trigger<T> extends Promise<T> {
   private _state: ResolvableState<T>;
