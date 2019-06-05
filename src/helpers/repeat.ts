@@ -1,6 +1,6 @@
 export const repeatUntil = (
   fn: Function,
-  stop: Function,
+  stopFn: Function,
   every: number = 0
 ): Promise<void> => {
   return new Promise(
@@ -12,7 +12,37 @@ export const repeatUntil = (
         try {
           const returnValue = fn();
 
-          if (stop(returnValue)) {
+          if (stopFn(returnValue)) {
+            clearInterval(intervalId);
+            resolve(lastValue);
+          } else {
+            lastValue = returnValue;
+          }
+        } catch (e) {
+          clearInterval(intervalId);
+          reject(e);
+        }
+      }, every);
+    }
+  );
+};
+
+export const repeatUntilEqual = (
+  fn: Function,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  stopValue: Exclude<any, Function>,
+  every: number = 0
+): Promise<void> => {
+  return new Promise(
+    (resolve, reject): void => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let lastValue: any;
+
+      const intervalId = setInterval((): void => {
+        try {
+          const returnValue = fn();
+
+          if (returnValue === stopValue) {
             clearInterval(intervalId);
             resolve(lastValue);
           } else {
