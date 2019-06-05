@@ -5,7 +5,7 @@ import {
   cancellingTest,
   decisionTest,
   decidingTest
-} from "./resolvable";
+} from "./triggers";
 
 describe("Testing various constructs with custom Promises", (): void => {
   resolvableTest();
