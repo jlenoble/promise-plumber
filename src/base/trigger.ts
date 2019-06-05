@@ -44,7 +44,7 @@ export class Canceller<T> extends Promise<T> {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public reject(reason?: any): void {
     if (!this._state.done) {
-      this._state.value = reason;
+      this._state.reason = reason;
       this._state.done = true;
     }
   }

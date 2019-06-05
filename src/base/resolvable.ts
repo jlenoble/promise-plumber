@@ -4,6 +4,7 @@ import { waitForDone } from "../helpers/wait";
 export interface ResolvableState<T> {
   done: boolean;
   value?: T | PromiseLike<T>;
+  reason?: any; // eslint-disable-line @typescript-eslint/no-explicit-any
 }
 
 export function resolutionExecutor<T>(
@@ -25,7 +26,7 @@ export function rejectionExecutor<T>(
 ): Executor<T> {
   return (resolve, reject): void => {
     const _reject = (): void => {
-      waitForDone(state).then((): void => reject(state.value));
+      waitForDone(state).then((): void => reject(state.reason));
     };
 
     executor(resolve, _reject);
