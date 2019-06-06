@@ -37,20 +37,20 @@ export abstract class AwaitSafeResolutionPromise<T> extends Promise<T>
   protected readonly _state: ResolutionState<T>;
 
   public constructor(
-    executorOrOptions: Executor<T> | ResolutionState<T>,
-    factory: (arg: ResolutionState<T>) => Executor<T>
+    executorOrState: Executor<T> | ResolutionState<T>,
+    factory: (state: ResolutionState<T>) => Executor<T>
   ) {
     // In async functions, awaiting a derived Promise instance will call
     // implicitly its ctor again. We have to guard against this behaviour for
     // Trigger promises because they start infinite loops that can only be
-    // broken from explicitly, so we check on the nature of executorOrOptions.
+    // broken from explicitly, so we check on the nature of executorOrState.
     // If its type is a function, it means that this ctor was called implicitly.
-    if (typeof executorOrOptions === "function") {
-      super(executorOrOptions);
+    if (typeof executorOrState === "function") {
+      super(executorOrState);
       this._state = new ResolvedState();
     } else {
-      super(factory(executorOrOptions));
-      this._state = executorOrOptions;
+      super(factory(executorOrState));
+      this._state = executorOrState;
     }
 
     Object.defineProperty(this, "_state", {
