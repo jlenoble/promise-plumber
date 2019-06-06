@@ -10,21 +10,24 @@ import {
   ResolvableState
 } from "./resolution-state";
 
-export class Trigger<T> extends Promise<T> {
-  private readonly _state: ResolutionState<T>;
+export class AwaitSafeResolutionPromise<T> extends Promise<T> {
+  protected readonly _state: ResolutionState<T>;
 
-  public constructor(executor?: Executor<T>) {
-    // Trigger is instanciated without any argument normally but in async
-    // functions, awaiting an instance will call this ctor again. We have to
-    // guard against starting implicitly infinite loops, which we do by checking
-    // on the existence of executor.
-    if (executor) {
-      super(executor);
+  public constructor(
+    executorOrOptions: Executor<T> | ResolutionState<T>,
+    factory: (arg: ResolutionState<T>) => Executor<T>
+  ) {
+    // In async functions, awaiting a derived Promise instance will call
+    // implicitly its ctor again. We have to guard against this behaviour for
+    // Trigger promises because they start infinite loops that can only be
+    // broken from explicitly, so we check on the nature of executorOrOptions.
+    // If its type is a function, it means that this ctor was called implicitly.
+    if (typeof executorOrOptions === "function") {
+      super(executorOrOptions);
       this._state = new ResolvedState();
     } else {
-      const state: ResolutionState<T> = new ResolvableState();
-      super(resolutionExecutor(state));
-      this._state = state;
+      super(factory(executorOrOptions));
+      this._state = executorOrOptions;
     }
 
     Object.defineProperty(this, "_state", {
@@ -32,7 +35,12 @@ export class Trigger<T> extends Promise<T> {
       enumerable: false,
       configurable: false
     });
+  }
+}
 
+export class Trigger<T> extends AwaitSafeResolutionPromise<T> {
+  public constructor(executor?: Executor<T>) {
+    super(executor || new ResolvableState(), resolutionExecutor);
     Object.freeze(this);
   }
 
@@ -41,29 +49,9 @@ export class Trigger<T> extends Promise<T> {
   }
 }
 
-export class Canceller<T> extends Promise<T> {
-  private readonly _state: ResolutionState<T>;
-
+export class Canceller<T> extends AwaitSafeResolutionPromise<T> {
   public constructor(executor?: Executor<T>) {
-    // Canceller is instanciated without any argument normally but in async
-    // functions, awaiting an instance will call this ctor again. We have to
-    // guard against starting implicitly infinite loops, which we do by checking
-    // on the existence of executor.
-    if (executor) {
-      super(executor);
-      this._state = new ResolvedState();
-    } else {
-      const state: ResolutionState<T> = new ResolvableState();
-      super(rejectionExecutor(state));
-      this._state = state;
-    }
-
-    Object.defineProperty(this, "_state", {
-      writable: false,
-      enumerable: false,
-      configurable: false
-    });
-
+    super(executor || new ResolvableState(), rejectionExecutor);
     Object.freeze(this);
   }
 
@@ -73,29 +61,9 @@ export class Canceller<T> extends Promise<T> {
   }
 }
 
-export class DecisionMaker<T> extends Promise<T> {
-  private readonly _state: ResolutionState<T>;
-
+export class DecisionMaker<T> extends AwaitSafeResolutionPromise<T> {
   public constructor(executor?: Executor<T>) {
-    // DecisionMaker is instanciated without any argument normally but in async
-    // functions, awaiting an instance will call this ctor again. We have to
-    // guard against starting implicitly infinite loops, which we do by checking
-    // on the existence of executor.
-    if (executor) {
-      super(executor);
-      this._state = new ResolvedState();
-    } else {
-      const state: ResolutionState<T> = new ResolvableState();
-      super(decisionExecutor(state));
-      this._state = state;
-    }
-
-    Object.defineProperty(this, "_state", {
-      writable: false,
-      enumerable: false,
-      configurable: false
-    });
-
+    super(executor || new ResolvableState(), decisionExecutor);
     Object.freeze(this);
   }
 
