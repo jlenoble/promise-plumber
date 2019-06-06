@@ -1,13 +1,13 @@
 import { Executor } from "./executor";
 import {
-  ResolvableState,
   resolutionExecutor,
   rejectionExecutor,
   decisionExecutor
 } from "./trigger-executors";
+import { ResolutionState } from "./resolution-state";
 
 export class Trigger<T> extends Promise<T> {
-  private readonly _state: ResolvableState<T>;
+  private readonly _state: ResolutionState<T>;
 
   public constructor(executor?: Executor<T>) {
     // Trigger is instanciated without any argument normally but in async
@@ -19,7 +19,7 @@ export class Trigger<T> extends Promise<T> {
       this._state = { done: true };
       Object.freeze(this._state);
     } else {
-      const state: ResolvableState<T> = {
+      const state: ResolutionState<T> = {
         done: false,
         value: undefined,
         reason: undefined
@@ -48,7 +48,7 @@ export class Trigger<T> extends Promise<T> {
 }
 
 export class Canceller<T> extends Promise<T> {
-  private readonly _state: ResolvableState<T>;
+  private readonly _state: ResolutionState<T>;
 
   public constructor(executor?: Executor<T>) {
     // Canceller is instanciated without any argument normally but in async
@@ -60,7 +60,7 @@ export class Canceller<T> extends Promise<T> {
       this._state = { done: true };
       Object.freeze(this._state);
     } else {
-      const state: ResolvableState<T> = {
+      const state: ResolutionState<T> = {
         done: false,
         value: undefined,
         reason: undefined
@@ -90,7 +90,7 @@ export class Canceller<T> extends Promise<T> {
 }
 
 export class DecisionMaker<T> extends Promise<T> {
-  private readonly _state: ResolvableState<T>;
+  private readonly _state: ResolutionState<T>;
 
   public constructor(executor?: Executor<T>) {
     // DecisionMaker is instanciated without any argument normally but in async
@@ -102,7 +102,7 @@ export class DecisionMaker<T> extends Promise<T> {
       this._state = { done: true };
       Object.freeze(this._state);
     } else {
-      const state: ResolvableState<T> = {
+      const state: ResolutionState<T> = {
         done: false,
         value: undefined,
         reason: undefined
