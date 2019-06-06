@@ -9,7 +9,7 @@ import {
   ResolutionState,
   ResolvedState,
   ResolvableState
-} from "./resolution-state";
+} from "./states/resolution-states";
 
 export class AwaitSafeResolutionPromise<T> extends Promise<T> {
   protected readonly _state: ResolutionState<T>;
