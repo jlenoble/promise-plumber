@@ -5,7 +5,7 @@ const delay = (timeout: number, value?: any): Promise<void> => {
       setTimeout(
         resolve,
         timeout,
-        typeof value === "function" ? value() : value
+        typeof value !== "function" ? value : value()
       );
     }
   );
