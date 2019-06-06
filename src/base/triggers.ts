@@ -4,7 +4,11 @@ import {
   rejectionExecutor,
   decisionExecutor
 } from "./trigger-executors";
-import { ResolutionState } from "./resolution-state";
+import {
+  ResolutionState,
+  ResolvedState,
+  ResolvableState
+} from "./resolution-state";
 
 export class Trigger<T> extends Promise<T> {
   private readonly _state: ResolutionState<T>;
@@ -16,15 +20,9 @@ export class Trigger<T> extends Promise<T> {
     // on the existence of executor.
     if (executor) {
       super(executor);
-      this._state = { done: true };
-      Object.freeze(this._state);
+      this._state = new ResolvedState();
     } else {
-      const state: ResolutionState<T> = {
-        done: false,
-        value: undefined,
-        reason: undefined
-      };
-      Object.seal(state);
+      const state: ResolutionState<T> = new ResolvableState();
       super(resolutionExecutor(state));
       this._state = state;
     }
@@ -39,11 +37,7 @@ export class Trigger<T> extends Promise<T> {
   }
 
   public resolve(value?: T | PromiseLike<T>): void {
-    if (!this._state.done) {
-      this._state.value = value;
-      this._state.done = true;
-      Object.freeze(this._state);
-    }
+    this._state.resolve(value);
   }
 }
 
@@ -57,15 +51,9 @@ export class Canceller<T> extends Promise<T> {
     // on the existence of executor.
     if (executor) {
       super(executor);
-      this._state = { done: true };
-      Object.freeze(this._state);
+      this._state = new ResolvedState();
     } else {
-      const state: ResolutionState<T> = {
-        done: false,
-        value: undefined,
-        reason: undefined
-      };
-      Object.seal(state);
+      const state: ResolutionState<T> = new ResolvableState();
       super(rejectionExecutor(state));
       this._state = state;
     }
@@ -81,11 +69,7 @@ export class Canceller<T> extends Promise<T> {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public reject(reason?: any): void {
-    if (!this._state.done) {
-      this._state.reason = reason;
-      this._state.done = true;
-      Object.freeze(this._state);
-    }
+    this._state.reject(reason);
   }
 }
 
@@ -99,15 +83,9 @@ export class DecisionMaker<T> extends Promise<T> {
     // on the existence of executor.
     if (executor) {
       super(executor);
-      this._state = { done: true };
-      Object.freeze(this._state);
+      this._state = new ResolvedState();
     } else {
-      const state: ResolutionState<T> = {
-        done: false,
-        value: undefined,
-        reason: undefined
-      };
-      Object.seal(state);
+      const state: ResolutionState<T> = new ResolvableState();
       super(decisionExecutor(state));
       this._state = state;
     }
@@ -122,19 +100,11 @@ export class DecisionMaker<T> extends Promise<T> {
   }
 
   public resolve(value?: T | PromiseLike<T>): void {
-    if (!this._state.done) {
-      this._state.value = value;
-      this._state.done = true;
-      Object.freeze(this._state);
-    }
+    this._state.resolve(value);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public reject(reason?: any): void {
-    if (!this._state.done) {
-      this._state.reason = reason;
-      this._state.done = true;
-      Object.freeze(this._state);
-    }
+    this._state.reject(reason);
   }
 }
