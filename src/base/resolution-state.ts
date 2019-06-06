@@ -1,4 +1,4 @@
-import { Resolve, Reject } from "./executor";
+import { Resolve, Reject } from "./executors/index";
 
 export interface ResolutionState<T> {
   done: boolean;

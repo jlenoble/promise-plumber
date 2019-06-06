@@ -1,6 +1,6 @@
 import { Executor } from "./executor";
-import { ResolutionState } from "./resolution-state";
-import { waitForDone } from "../helpers/wait";
+import { ResolutionState } from "../resolution-state";
+import { waitForDone } from "../../helpers/wait";
 
 export function genericResolutionExecutor<T>(
   executor: Executor<T>,

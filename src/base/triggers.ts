@@ -1,9 +1,10 @@
-import { Executor } from "./executor";
 import {
+  Executor,
   explicitResolutionExecutor,
   explicitRejectionExecutor,
   explicitDecisionExecutor
-} from "./trigger-executors";
+} from "./executors/index";
+
 import {
   ResolutionState,
   ResolvedState,
