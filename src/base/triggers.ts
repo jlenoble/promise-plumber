@@ -3,13 +3,9 @@ import {
   explicitResolutionExecutor,
   explicitRejectionExecutor,
   explicitDecisionExecutor
-} from "./executors/index";
+} from "./executors";
 
-import {
-  ResolutionState,
-  ResolvedState,
-  ResolvableState
-} from "./states/resolution-states";
+import { ResolutionState, ResolvedState, ResolvableState } from "./states";
 
 export class AwaitSafeResolutionPromise<T> extends Promise<T> {
   protected readonly _state: ResolutionState<T>;
