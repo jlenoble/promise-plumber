@@ -1,5 +1,7 @@
 import {
   Executor,
+  Resolve,
+  Reject,
   explicitResolutionExecutor,
   explicitRejectionExecutor,
   explicitDecisionExecutor
@@ -7,7 +9,31 @@ import {
 
 import { ResolutionState, ResolvedState, ResolvableState } from "./states";
 
-export class AwaitSafeResolutionPromise<T> extends Promise<T> {
+export interface AbstractResolutionPromise<T> extends Promise<T> {
+  resolve?: Resolve<T>;
+  reject?: Reject;
+}
+
+export interface ResolvePromise<T> extends Promise<T> {
+  resolve: Resolve<T>;
+}
+
+export interface RejectPromise<T> extends Promise<T> {
+  reject: Reject;
+}
+
+export interface DecidePromise<T> extends Promise<T> {
+  resolve: Resolve<T>;
+  reject: Reject;
+}
+
+export type ResolutionPromise<T> =
+  | ResolvePromise<T>
+  | RejectPromise<T>
+  | (ResolvePromise<T> & RejectPromise<T>);
+
+export abstract class AwaitSafeResolutionPromise<T> extends Promise<T>
+  implements AbstractResolutionPromise<T> {
   protected readonly _state: ResolutionState<T>;
 
   public constructor(
@@ -35,7 +61,8 @@ export class AwaitSafeResolutionPromise<T> extends Promise<T> {
   }
 }
 
-export class Trigger<T> extends AwaitSafeResolutionPromise<T> {
+export class Trigger<T> extends AwaitSafeResolutionPromise<T>
+  implements ResolvePromise<T> {
   public constructor(executor?: Executor<T>) {
     super(executor || new ResolvableState(), explicitResolutionExecutor);
     Object.freeze(this);
@@ -46,7 +73,8 @@ export class Trigger<T> extends AwaitSafeResolutionPromise<T> {
   }
 }
 
-export class Canceller<T> extends AwaitSafeResolutionPromise<T> {
+export class Canceller<T> extends AwaitSafeResolutionPromise<T>
+  implements RejectPromise<T> {
   public constructor(executor?: Executor<T>) {
     super(executor || new ResolvableState(), explicitRejectionExecutor);
     Object.freeze(this);
@@ -58,7 +86,8 @@ export class Canceller<T> extends AwaitSafeResolutionPromise<T> {
   }
 }
 
-export class DecisionMaker<T> extends AwaitSafeResolutionPromise<T> {
+export class DecisionMaker<T> extends AwaitSafeResolutionPromise<T>
+  implements DecidePromise<T> {
   public constructor(executor?: Executor<T>) {
     super(executor || new ResolvableState(), explicitDecisionExecutor);
     Object.freeze(this);
