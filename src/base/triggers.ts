@@ -1,8 +1,8 @@
 import { Executor } from "./executor";
 import {
-  resolutionExecutor,
-  rejectionExecutor,
-  decisionExecutor
+  explicitResolutionExecutor,
+  explicitRejectionExecutor,
+  explicitDecisionExecutor
 } from "./trigger-executors";
 import {
   ResolutionState,
@@ -40,7 +40,7 @@ export class AwaitSafeResolutionPromise<T> extends Promise<T> {
 
 export class Trigger<T> extends AwaitSafeResolutionPromise<T> {
   public constructor(executor?: Executor<T>) {
-    super(executor || new ResolvableState(), resolutionExecutor);
+    super(executor || new ResolvableState(), explicitResolutionExecutor);
     Object.freeze(this);
   }
 
@@ -51,7 +51,7 @@ export class Trigger<T> extends AwaitSafeResolutionPromise<T> {
 
 export class Canceller<T> extends AwaitSafeResolutionPromise<T> {
   public constructor(executor?: Executor<T>) {
-    super(executor || new ResolvableState(), rejectionExecutor);
+    super(executor || new ResolvableState(), explicitRejectionExecutor);
     Object.freeze(this);
   }
 
@@ -63,7 +63,7 @@ export class Canceller<T> extends AwaitSafeResolutionPromise<T> {
 
 export class DecisionMaker<T> extends AwaitSafeResolutionPromise<T> {
   public constructor(executor?: Executor<T>) {
-    super(executor || new ResolvableState(), decisionExecutor);
+    super(executor || new ResolvableState(), explicitDecisionExecutor);
     Object.freeze(this);
   }
 

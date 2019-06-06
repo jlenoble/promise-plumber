@@ -46,19 +46,25 @@ export function genericDecisionExecutor<T>(
   };
 }
 
-export function resolutionExecutor<T>(state: ResolutionState<T>): Executor<T> {
+export function explicitResolutionExecutor<T>(
+  state: ResolutionState<T>
+): Executor<T> {
   return (resolve): void => {
     waitForDone(state).then((): void => resolve(state.value));
   };
 }
 
-export function rejectionExecutor<T>(state: ResolutionState<T>): Executor<T> {
+export function explicitRejectionExecutor<T>(
+  state: ResolutionState<T>
+): Executor<T> {
   return (resolve, reject): void => {
     waitForDone(state).then((): void => reject(state.reason));
   };
 }
 
-export function decisionExecutor<T>(state: ResolutionState<T>): Executor<T> {
+export function explicitDecisionExecutor<T>(
+  state: ResolutionState<T>
+): Executor<T> {
   return (resolve, reject): void => {
     waitForDone(state).then(
       (): void => {
