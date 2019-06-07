@@ -49,6 +49,7 @@ export class Pool<T> extends AwaitSafeResolutionPromise<T[]> {
           if (!this._state.done) {
             this._nPendingValues = 0;
             this._resolvedValues.length = 0;
+            Object.freeze(this._resolvedValues);
             this._state.reject(err);
             Object.freeze(this);
           }
