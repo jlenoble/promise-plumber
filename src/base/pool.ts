@@ -1,6 +1,6 @@
-import { DecisionMaker } from "./triggers";
+import { Decision } from "./triggers";
 
-export class Pool<T> extends DecisionMaker<T[]> {
+export class Pool<T> extends Decision<T[]> {
   protected _nPendingValues: number = 0;
   protected readonly _resolvedValues: T[] = [];
 

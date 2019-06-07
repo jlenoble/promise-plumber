@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { Trigger, Canceller, DecisionMaker } from "../../src/base/triggers";
+import { Trigger, Deadline, Decision } from "../../src/base/triggers";
 import { repeatN } from "../../src/helpers/repeat";
 
 export const resolvableTest = (): ReturnType<typeof it> =>
@@ -16,7 +16,7 @@ export const resolvableTest = (): ReturnType<typeof it> =>
   });
 
 export const triggeringTest = (): ReturnType<typeof it> =>
-  it("Triggering promises", async (): Promise<void> => {
+  it("Starting promises", async (): Promise<void> => {
     const trigger = new Trigger();
 
     const p1 = trigger.then((): number => 1);
@@ -54,8 +54,8 @@ export const triggeringTest = (): ReturnType<typeof it> =>
   });
 
 export const rejectableTest = (): ReturnType<typeof it> =>
-  it("Testing a Canceller", async (): Promise<void> => {
-    const trigger = new Canceller();
+  it("Testing a Deadline", async (): Promise<void> => {
+    const trigger = new Deadline();
 
     trigger.reject(new Error("Error 1"));
     trigger.reject(new Error("Error 2"));
@@ -71,7 +71,7 @@ export const rejectableTest = (): ReturnType<typeof it> =>
 
 export const cancellingTest = (): ReturnType<typeof it> =>
   it("Cancelling promises", async (): Promise<void> => {
-    const trigger = new Canceller();
+    const trigger = new Deadline();
 
     const p1 = trigger.then((): number => 1, (): number => 4);
     const p2 = trigger.then((): number => 2, (): number => 5);
@@ -112,8 +112,8 @@ export const cancellingTest = (): ReturnType<typeof it> =>
   });
 
 export const decisionTest = (): ReturnType<typeof it> =>
-  it("Testing a DecisionMaker", async (): Promise<void> => {
-    const trigger1 = new DecisionMaker();
+  it("Testing a Decision", async (): Promise<void> => {
+    const trigger1 = new Decision();
 
     trigger1.resolve(1);
     trigger1.resolve(2);
@@ -123,7 +123,7 @@ export const decisionTest = (): ReturnType<typeof it> =>
 
     expect(result1).to.equal(1);
 
-    const trigger2 = new DecisionMaker();
+    const trigger2 = new Decision();
 
     trigger2.reject(new Error("Error 1"));
     trigger2.reject(new Error("Error 2"));
@@ -139,7 +139,7 @@ export const decisionTest = (): ReturnType<typeof it> =>
 
 export const decidingTest = (): ReturnType<typeof it> =>
   it("Deciding promises", async (): Promise<[void, void]> => {
-    const trigger1 = new DecisionMaker();
+    const trigger1 = new Decision();
 
     const p1 = trigger1.then((): number => 1);
     const p2 = trigger1.then((): number => 2);
@@ -172,7 +172,7 @@ export const decidingTest = (): ReturnType<typeof it> =>
       throw e;
     }
 
-    const trigger2 = new DecisionMaker();
+    const trigger2 = new Decision();
 
     const p4 = trigger2.then((): number => 1, (): number => 4);
     const p5 = trigger2.then((): number => 2, (): number => 5);

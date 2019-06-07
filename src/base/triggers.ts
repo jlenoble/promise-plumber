@@ -64,7 +64,7 @@ export class Trigger<T> extends AwaitSafeResolutionPromise<T>
   }
 }
 
-export class Canceller<T> extends AwaitSafeResolutionPromise<T>
+export class Deadline<T> extends AwaitSafeResolutionPromise<T>
   implements RejectPromise<T> {
   public constructor(executor?: Executor<T>) {
     super(executor || new ResolvableState(), explicitResolutionExecutor);
@@ -76,7 +76,7 @@ export class Canceller<T> extends AwaitSafeResolutionPromise<T>
   }
 }
 
-export class DecisionMaker<T> extends AwaitSafeResolutionPromise<T>
+export class Decision<T> extends AwaitSafeResolutionPromise<T>
   implements DecidePromise<T> {
   public constructor(executor?: Executor<T>) {
     super(executor || new ResolvableState(), explicitResolutionExecutor);
