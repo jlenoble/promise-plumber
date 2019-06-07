@@ -1,13 +1,11 @@
-import {
-  Executor,
-  Resolve,
-  Reject,
-  explicitResolutionExecutor,
-  explicitRejectionExecutor,
-  explicitDecisionExecutor
-} from "./executors";
+import { Executor, Resolve, Reject } from "./executors/executor";
+import { explicitResolutionExecutor } from "./executors/explicit-resolution-executor";
 
-import { ResolutionState, ResolvedState, ResolvableState } from "./states";
+import {
+  ResolutionState,
+  ResolvedState,
+  ResolvableState
+} from "./states/resolution-state";
 
 export interface AbstractResolutionPromise<T> extends Promise<T> {
   resolve?: Resolve<T>;
@@ -42,9 +40,9 @@ export abstract class AwaitSafeResolutionPromise<T> extends Promise<T>
   ) {
     // In async functions, awaiting a derived Promise instance will call
     // implicitly its ctor again. We have to guard against this behaviour for
-    // Trigger promises because they start infinite loops that can only be
-    // broken from explicitly, so we check on the nature of executorOrState.
-    // If its type is a function, it means that this ctor was called implicitly.
+    // Triggers because they can only be resolved explicitly, so we check on the
+    // nature of executorOrState. If its type is a function, it means that this
+    // ctor was called implicitly.
     if (typeof executorOrState === "function") {
       super(executorOrState);
       this._state = new ResolvedState();
@@ -52,12 +50,6 @@ export abstract class AwaitSafeResolutionPromise<T> extends Promise<T>
       super(factory(executorOrState));
       this._state = executorOrState;
     }
-
-    Object.defineProperty(this, "_state", {
-      writable: false,
-      enumerable: false,
-      configurable: false
-    });
   }
 }
 
@@ -65,7 +57,6 @@ export class Trigger<T> extends AwaitSafeResolutionPromise<T>
   implements ResolvePromise<T> {
   public constructor(executor?: Executor<T>) {
     super(executor || new ResolvableState(), explicitResolutionExecutor);
-    Object.freeze(this);
   }
 
   public resolve(value?: T | PromiseLike<T>): void {
@@ -76,8 +67,7 @@ export class Trigger<T> extends AwaitSafeResolutionPromise<T>
 export class Canceller<T> extends AwaitSafeResolutionPromise<T>
   implements RejectPromise<T> {
   public constructor(executor?: Executor<T>) {
-    super(executor || new ResolvableState(), explicitRejectionExecutor);
-    Object.freeze(this);
+    super(executor || new ResolvableState(), explicitResolutionExecutor);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -89,8 +79,7 @@ export class Canceller<T> extends AwaitSafeResolutionPromise<T>
 export class DecisionMaker<T> extends AwaitSafeResolutionPromise<T>
   implements DecidePromise<T> {
   public constructor(executor?: Executor<T>) {
-    super(executor || new ResolvableState(), explicitDecisionExecutor);
-    Object.freeze(this);
+    super(executor || new ResolvableState(), explicitResolutionExecutor);
   }
 
   public resolve(value?: T | PromiseLike<T>): void {
