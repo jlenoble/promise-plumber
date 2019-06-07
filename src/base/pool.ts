@@ -1,15 +1,8 @@
-import { Executor } from "./executors/executor";
-import { explicitResolutionExecutor } from "./executors/explicit-resolution-executor";
-import { ResolvableState } from "./states/resolution-state";
-import { AwaitSafeResolutionPromise } from "./triggers";
+import { DecisionMaker } from "./triggers";
 
-export class Pool<T> extends AwaitSafeResolutionPromise<T[]> {
+export class Pool<T> extends DecisionMaker<T[]> {
   protected _nPendingValues: number = 0;
   protected readonly _resolvedValues: T[] = [];
-
-  public constructor(executor?: Executor<T[]>) {
-    super(executor || new ResolvableState(), explicitResolutionExecutor);
-  }
 
   public add(value: T | PromiseLike<T>): this {
     if (!this._state.done) {
