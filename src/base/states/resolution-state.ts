@@ -11,7 +11,7 @@ export interface ResolutionState<T> {
 }
 
 export class ResolvedState<T> implements ResolutionState<T> {
-  public done: boolean = true;
+  public readonly done: boolean = true;
 
   public register(): void {}
   public resolve(): void {}
