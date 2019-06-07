@@ -7,7 +7,7 @@ import {
   decidingTest
 } from "./triggers";
 
-import { valuePoolTest, promisePoolTest } from "./pool";
+import { valuePoolTest, promisePoolTest, promisePoolErrorTest } from "./pool";
 
 describe("Testing various constructs with custom Promises", (): void => {
   resolvableTest();
@@ -19,4 +19,5 @@ describe("Testing various constructs with custom Promises", (): void => {
 
   valuePoolTest();
   promisePoolTest();
+  promisePoolErrorTest();
 });
