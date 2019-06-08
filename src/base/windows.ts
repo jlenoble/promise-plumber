@@ -43,9 +43,10 @@ export class ValidationWindow<T> extends AbstractResolutionWindow<T[]> {
 
       start.then(this.start.bind(this), this.reject.bind(this));
 
-      Promise.all([start, end]).then((): void => {
-        this._state.resolve(this._resolvedValues);
-      }, this.reject.bind(this));
+      Promise.all([start, end]).then(
+        this.resolve.bind(this),
+        this.reject.bind(this)
+      );
     }
 
     this._resolvedValues = [];
@@ -59,6 +60,12 @@ export class ValidationWindow<T> extends AbstractResolutionWindow<T[]> {
     }, this.reject.bind(this));
 
     return this;
+  }
+
+  public resolve(): void {
+    if (!this._state.done) {
+      this._state.resolve(this._resolvedValues);
+    }
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
