@@ -1,7 +1,7 @@
 import { expect } from "chai";
-import delay from "../helpers/delay";
+import { delay } from "../../src/helpers/delay";
 import { repeatUntil } from "../../src/helpers/repeat";
-import immediate from "../helpers/immediate";
+import { immediate } from "../../src/helpers/immediate";
 import LooseObject from "../helpers/loose-object";
 
 export const triggerableTest = (): ReturnType<typeof it> =>

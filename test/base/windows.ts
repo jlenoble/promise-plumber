@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { ValidationWindow } from "../../src/base/windows";
-import delay, { delays } from "../helpers/delay";
+import { delay, delays } from "../../src/helpers/delay";
 
 export const valueValidationWindowTest = (): ReturnType<typeof it> =>
   it("Testing a ValidationWindow for values", async (): Promise<void> => {

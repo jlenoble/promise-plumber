@@ -1,4 +1,4 @@
-export default function delay<T>(
+export function delay<T>(
   timeout: number,
   value?: any, // eslint-disable-line @typescript-eslint/no-explicit-any
   after?: Promise<T>

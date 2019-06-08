@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { Pool } from "../../src/base/pool";
-import delay from "../helpers/delay";
+import { delay } from "../../src/helpers/delay";
 
 export const valuePoolTest = (): ReturnType<typeof it> =>
   it("Testing a Pool of values", async (): Promise<void> => {

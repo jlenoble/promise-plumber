@@ -1,6 +1,4 @@
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const immediate = (value?: any): Promise<void> => {
+export function immediate<T>(value?: T): Promise<T> {
   return Promise.resolve(typeof value !== "function" ? value : value());
-};
-
-export default immediate;
+}

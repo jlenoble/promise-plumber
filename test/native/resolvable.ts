@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import immediate from "../helpers/immediate";
+import { immediate } from "../../src/helpers/immediate";
 import LooseObject from "../helpers/loose-object";
 
 export const resolvableTest = (): ReturnType<typeof it> =>
