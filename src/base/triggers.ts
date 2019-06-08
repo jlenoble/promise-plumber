@@ -78,7 +78,7 @@ export class Deadline<T> extends AwaitSafeResolutionPromise<T>
 
 export class Decision<T> extends AwaitSafeResolutionPromise<T>
   implements DecidePromise<T> {
-  public constructor(executor?: Executor<T>) {
+  public constructor(executor?: Executor<T> | ResolutionState<T>) {
     super(executor || new ResolvableState(), explicitResolutionExecutor);
   }
 
