@@ -6,25 +6,21 @@ export default function delay<T>(
   return after
     ? after.then(
         (): Promise<T> =>
-          new Promise(
-            (resolve): void => {
-              setTimeout(
-                resolve,
-                timeout,
-                typeof value !== "function" ? value : value()
-              );
-            }
-          )
+          new Promise((resolve): void => {
+            setTimeout(
+              resolve,
+              timeout,
+              typeof value !== "function" ? value : value()
+            );
+          })
       )
-    : new Promise(
-        (resolve): void => {
-          setTimeout(
-            resolve,
-            timeout,
-            typeof value !== "function" ? value : value()
-          );
-        }
-      );
+    : new Promise((resolve): void => {
+        setTimeout(
+          resolve,
+          timeout,
+          typeof value !== "function" ? value : value()
+        );
+      });
 }
 
 export function delays<T>(
@@ -47,11 +43,9 @@ export function delays<T>(
     after || delay(timeouts.shift() as number, values.shift() as T)
   ];
 
-  timeouts.forEach(
-    (timeout: number, i: number): void => {
-      a.push(delay(timeout, values[i], a[i - 1]));
-    }
-  );
+  timeouts.forEach((timeout: number, i: number): void => {
+    a.push(delay(timeout, values[i], a[i - 1]));
+  });
 
   return a;
 }

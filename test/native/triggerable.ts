@@ -9,25 +9,19 @@ export const triggerableTest = (): ReturnType<typeof it> =>
     const started = { started: true };
     const notStarted = { notStarted: true };
 
-    const trigger: LooseObject = new Promise(
-      (resolve): void => {
-        immediate().then(
-          (): void => {
-            Object.defineProperty(trigger, "start", {
-              value: (v: object): void => resolve(v)
-            });
-          }
-        );
-      }
-    );
+    const trigger: LooseObject = new Promise((resolve): void => {
+      immediate().then((): void => {
+        Object.defineProperty(trigger, "start", {
+          value: (v: object): void => resolve(v)
+        });
+      });
+    });
 
     let result: object = notStarted;
 
-    trigger.then(
-      (): void => {
-        result = started;
-      }
-    );
+    trigger.then((): void => {
+      result = started;
+    });
 
     expect(result).to.equal(notStarted);
 
@@ -50,17 +44,13 @@ export const cancelableTest = (): ReturnType<typeof it> =>
     const notStarted = { notStarted: true };
     const canceled = { canceled: true };
 
-    const trigger: LooseObject = new Promise(
-      (resolve, reject): void => {
-        immediate().then(
-          (): void => {
-            Object.defineProperty(trigger, "cancel", {
-              value: (e: Error): void => reject(e)
-            });
-          }
-        );
-      }
-    );
+    const trigger: LooseObject = new Promise((resolve, reject): void => {
+      immediate().then((): void => {
+        Object.defineProperty(trigger, "cancel", {
+          value: (e: Error): void => reject(e)
+        });
+      });
+    });
 
     let result: object = notStarted;
 
@@ -95,55 +85,45 @@ export const interruptibleTest = (): ReturnType<typeof it> =>
     const canceled = { canceled: true };
     const completed = { completed: true };
 
-    const trigger1: LooseObject = new Promise(
-      (resolve): void => {
-        immediate().then(
-          (): void => {
-            Object.defineProperty(trigger1, "start", {
-              value: (v: object): void => resolve(v)
-            });
-          }
-        );
-      }
-    );
+    const trigger1: LooseObject = new Promise((resolve): void => {
+      immediate().then((): void => {
+        Object.defineProperty(trigger1, "start", {
+          value: (v: object): void => resolve(v)
+        });
+      });
+    });
 
-    const trigger2: LooseObject = new Promise(
-      (resolve, reject): void => {
-        immediate().then(
-          (): void => {
-            Object.defineProperty(trigger2, "cancel", {
-              value: (e: Error): void => reject(e)
-            });
-          }
-        );
-      }
-    );
+    const trigger2: LooseObject = new Promise((resolve, reject): void => {
+      immediate().then((): void => {
+        Object.defineProperty(trigger2, "cancel", {
+          value: (e: Error): void => reject(e)
+        });
+      });
+    });
 
     let result: object = notStarted;
 
-    const interruptible = new Promise(
-      (resolve): void => {
-        const t1 = Date.now();
-        let t2 = t1;
+    const interruptible = new Promise((resolve): void => {
+      const t1 = Date.now();
+      let t2 = t1;
 
-        const rslv = (): LooseObject => {
-          if (t2 - t1 < 10) {
-            t2 = Date.now();
-            return result;
-          }
+      const rslv = (): LooseObject => {
+        if (t2 - t1 < 10) {
+          t2 = Date.now();
+          return result;
+        }
 
-          return completed;
-        };
+        return completed;
+      };
 
-        resolve(
-          repeatUntil(
-            rslv,
-            (returnValue: LooseObject): boolean =>
-              returnValue === canceled || returnValue === completed
-          )
-        );
-      }
-    );
+      resolve(
+        repeatUntil(
+          rslv,
+          (returnValue: LooseObject): boolean =>
+            returnValue === canceled || returnValue === completed
+        )
+      );
+    });
 
     trigger1
       .then(

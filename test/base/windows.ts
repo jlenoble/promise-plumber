@@ -139,17 +139,13 @@ export const resumeValidationWindowTest = (): ReturnType<typeof it> =>
       .add(d[14])
       .add(d[15]);
 
-    d[6].then(
-      (): void => {
-        window.pause();
-      }
-    );
+    d[6].then((): void => {
+      window.pause();
+    });
 
-    d[9].then(
-      (): void => {
-        window.resume();
-      }
-    );
+    d[9].then((): void => {
+      window.resume();
+    });
 
     const results = await window;
 
