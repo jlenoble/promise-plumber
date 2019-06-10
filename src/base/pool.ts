@@ -8,25 +8,42 @@ export class Pool<T> extends Decision<T[]> {
     if (!this._state.done) {
       this._nPendingValues++;
 
-      Promise.resolve(value).then(
-        (val: T): void => {
-          if (!this._state.done) {
-            this._resolvedValues.push(val);
-            this._nPendingValues--;
+      Promise.resolve(value).then((val: T): void => {
+        if (!this._state.done) {
+          this._resolvedValues.push(val);
+          this._nPendingValues--;
+        }
+      }, this.reject.bind(this));
+    }
 
-            if (this._nPendingValues === 0) {
-              this._state.resolve(this._resolvedValues);
-            }
-          }
-        },
-        (err: Error): void => {
-          if (!this._state.done) {
-            this._nPendingValues = 0;
-            this._resolvedValues.length = 0;
-            this._state.reject(err);
+    return this;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public reject(reason?: any): void {
+    if (!this._state.done) {
+      this._nPendingValues = 0;
+      this._resolvedValues.length = 0;
+      super.reject(reason);
+    }
+  }
+}
+
+export class Sink<T> extends Pool<T> {
+  public add(value: T | PromiseLike<T>): this {
+    if (!this._state.done) {
+      this._nPendingValues++;
+
+      Promise.resolve(value).then((val: T): void => {
+        if (!this._state.done) {
+          this._resolvedValues.push(val);
+          this._nPendingValues--;
+
+          if (this._nPendingValues === 0) {
+            this._state.resolve(this._resolvedValues);
           }
         }
-      );
+      }, this.reject.bind(this));
     }
 
     return this;

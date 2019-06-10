@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { Pool } from "../../src/base/pool";
+import { Sink as Pool } from "../../src/base/pool";
 import { delay } from "../../src/helpers/delay";
 
 export const valuePoolTest = (): ReturnType<typeof it> =>
