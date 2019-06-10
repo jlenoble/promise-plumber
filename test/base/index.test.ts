@@ -7,7 +7,7 @@ import {
   decidingTest
 } from "./triggers";
 
-import { valuePoolTest, promisePoolTest, promisePoolErrorTest } from "./pool";
+import { valuePoolTest, promisePoolTest, promisePoolErrorTest } from "./pools";
 
 import {
   valueValidationWindowTest,
