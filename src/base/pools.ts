@@ -19,6 +19,10 @@ export class Pool<T> extends Decision<T[]> {
     return this;
   }
 
+  public resolve(): void {
+    this._state.resolve(this._resolvedValues);
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public reject(reason?: any): void {
     if (!this._state.done) {
@@ -40,7 +44,7 @@ export class Sink<T> extends Pool<T> {
           this._nPendingValues--;
 
           if (this._nPendingValues === 0) {
-            this._state.resolve(this._resolvedValues);
+            this.resolve();
           }
         }
       }, this.reject.bind(this));
