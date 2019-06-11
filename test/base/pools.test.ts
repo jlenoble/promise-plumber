@@ -2,7 +2,7 @@ import { expect } from "chai";
 import { Sink, Pool } from "../../src/base/pools";
 import { delay } from "../../src/helpers/delay";
 
-export const valuePoolTest = (): ReturnType<typeof it> =>
+describe("Testing Pool classes", (): void => {
   it("Testing a Pool of values", async (): Promise<void> => {
     const pool = new Pool();
 
@@ -17,7 +17,6 @@ export const valuePoolTest = (): ReturnType<typeof it> =>
     expect(results).to.eql([1, 2, 3]);
   });
 
-export const promisePoolTest = (): ReturnType<typeof it> =>
   it("Testing a Pool of Promises", async (): Promise<void> => {
     const pool = new Pool();
 
@@ -37,7 +36,6 @@ export const promisePoolTest = (): ReturnType<typeof it> =>
     expect(results).to.eql([300, 100, 200, 400, 500]);
   });
 
-export const promisePoolErrorTest = (): ReturnType<typeof it> =>
   it("Testing a Pool of Promises with errors", async (): Promise<void> => {
     const pool = new Pool();
 
@@ -65,7 +63,6 @@ export const promisePoolErrorTest = (): ReturnType<typeof it> =>
     }
   });
 
-export const valueSinkTest = (): ReturnType<typeof it> =>
   it("Testing a Sink of values", async (): Promise<void> => {
     const sink = new Sink();
 
@@ -78,7 +75,6 @@ export const valueSinkTest = (): ReturnType<typeof it> =>
     expect(results).to.eql([1, 2, 3]);
   });
 
-export const promiseSinkTest = (): ReturnType<typeof it> =>
   it("Testing a Sink of Promises", async (): Promise<void> => {
     const sink = new Sink();
 
@@ -96,7 +92,6 @@ export const promiseSinkTest = (): ReturnType<typeof it> =>
     expect(results).to.eql([300, 100, 200]);
   });
 
-export const promiseSinkErrorTest = (): ReturnType<typeof it> =>
   it("Testing a Sink of Promises with errors", async (): Promise<void> => {
     const sink = new Sink();
 
@@ -121,3 +116,4 @@ export const promiseSinkErrorTest = (): ReturnType<typeof it> =>
       expect(e.message).to.equal("PoolingError");
     }
   });
+});

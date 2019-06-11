@@ -2,7 +2,7 @@ import { expect } from "chai";
 import { Trigger, Deadline, Decision } from "../../src/base/triggers";
 import { repeatN } from "../../src/helpers/repeat";
 
-export const resolvableTest = (): ReturnType<typeof it> =>
+describe("Testing Trigger classes", (): void => {
   it("Testing a Trigger", async (): Promise<void> => {
     const trigger = new Trigger();
 
@@ -15,7 +15,6 @@ export const resolvableTest = (): ReturnType<typeof it> =>
     expect(result).to.equal(1);
   });
 
-export const triggeringTest = (): ReturnType<typeof it> =>
   it("Starting promises", async (): Promise<void> => {
     const trigger = new Trigger();
 
@@ -53,7 +52,6 @@ export const triggeringTest = (): ReturnType<typeof it> =>
     return r;
   });
 
-export const rejectableTest = (): ReturnType<typeof it> =>
   it("Testing a Deadline", async (): Promise<void> => {
     const trigger = new Deadline();
 
@@ -69,7 +67,6 @@ export const rejectableTest = (): ReturnType<typeof it> =>
     }
   });
 
-export const cancellingTest = (): ReturnType<typeof it> =>
   it("Cancelling promises", async (): Promise<void> => {
     const trigger = new Deadline();
 
@@ -111,7 +108,6 @@ export const cancellingTest = (): ReturnType<typeof it> =>
     return r;
   });
 
-export const decisionTest = (): ReturnType<typeof it> =>
   it("Testing a Decision", async (): Promise<void> => {
     const trigger1 = new Decision();
 
@@ -137,7 +133,6 @@ export const decisionTest = (): ReturnType<typeof it> =>
     }
   });
 
-export const decidingTest = (): ReturnType<typeof it> =>
   it("Deciding promises", async (): Promise<[void, void]> => {
     const trigger1 = new Decision();
 
@@ -211,3 +206,4 @@ export const decidingTest = (): ReturnType<typeof it> =>
 
     return Promise.all([r, s]);
   });
+});

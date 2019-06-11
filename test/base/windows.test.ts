@@ -2,7 +2,7 @@ import { expect } from "chai";
 import { ValidationWindow } from "../../src/base/windows";
 import { delay, delays } from "../../src/helpers/delay";
 
-export const valueValidationWindowTest = (): ReturnType<typeof it> =>
+describe("Testing Window classes", (): void => {
   it("Testing a ValidationWindow for values", async (): Promise<void> => {
     const start = delay(0);
     const end = delay(5);
@@ -29,7 +29,6 @@ export const valueValidationWindowTest = (): ReturnType<typeof it> =>
     expect(results).to.eql([4, 5, 6]);
   });
 
-export const promiseValidationWindowTest = (): ReturnType<typeof it> =>
   it("Testing a ValidationWindow for promises", async (): Promise<void> => {
     const start = delay(5);
     const end = delay(10);
@@ -54,7 +53,6 @@ export const promiseValidationWindowTest = (): ReturnType<typeof it> =>
     await delay(3);
   });
 
-export const promiseValidationWindowErrorTest = (): ReturnType<typeof it> =>
   it("Testing a ValidationWindow for promises with errors", async (): Promise<
     void
   > => {
@@ -115,7 +113,6 @@ export const promiseValidationWindowErrorTest = (): ReturnType<typeof it> =>
     await delay(6);
   });
 
-export const resumeValidationWindowTest = (): ReturnType<typeof it> =>
   it("Pausing and resuming a ValidationWindow", async (): Promise<void> => {
     const a = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
     const d = delays(a, a);
@@ -153,3 +150,4 @@ export const resumeValidationWindowTest = (): ReturnType<typeof it> =>
 
     await delay(3);
   });
+});
