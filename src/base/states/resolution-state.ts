@@ -26,7 +26,7 @@ export class ResolvableState<T> implements ResolutionState<T> {
   private _resolve?: Resolve<T>;
   private _reject?: Reject;
 
-  public register(resolve: Resolve<T>, reject?: Reject): void {
+  public register(resolve: Resolve<T>, reject: Reject): void {
     if (!this._resolve) {
       this._resolve = resolve;
       this._reject = reject;
