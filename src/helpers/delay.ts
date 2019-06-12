@@ -2,7 +2,7 @@ import { TimingOutTrigger } from "../base/timeouts";
 
 export function delay<T>(
   timeout: number,
-  value?: any, // eslint-disable-line @typescript-eslint/no-explicit-any
+  value?: T | PromiseLike<T>,
   after?: Promise<T>
 ): Promise<T> {
   const p: Promise<T> = new Promise((resolve): void => {
@@ -14,7 +14,7 @@ export function delay<T>(
 
 export function delays<T>(
   timeouts: number[],
-  values?: (T | undefined)[],
+  values?: (T | PromiseLike<T> | undefined)[],
   after?: Promise<T>
 ): Promise<T>[] {
   if (timeouts.length === 0) {
@@ -40,7 +40,13 @@ export function delays<T>(
   // values are all over the place. It means that all delays will resolve
   // immediately once the largest one has resolved.
   timeouts.forEach((timeout: number, i: number): void => {
-    a.push(delay(timeout, (values as (T | undefined)[])[i], a[i - 1]));
+    a.push(
+      delay(
+        timeout,
+        (values as (T | PromiseLike<T> | undefined)[])[i],
+        a[i - 1]
+      )
+    );
   });
 
   return a;
@@ -48,7 +54,7 @@ export function delays<T>(
 
 export function collapsibleDelay<T>(
   timeout: number,
-  value?: any, // eslint-disable-line @typescript-eslint/no-explicit-any
+  value?: T | PromiseLike<T>,
   after?: TimingOutTrigger<T>
 ): TimingOutTrigger<T> {
   const p: TimingOutTrigger<T> = new TimingOutTrigger(timeout, value);
@@ -60,7 +66,7 @@ export function collapsibleDelay<T>(
 
 export function collapsibleDelays<T>(
   timeouts: number[],
-  values?: (T | undefined)[],
+  values?: (T | PromiseLike<T> | undefined)[],
   after?: TimingOutTrigger<T>
 ): TimingOutTrigger<T>[] {
   if (timeouts.length === 0) {
@@ -88,7 +94,11 @@ export function collapsibleDelays<T>(
   // collapsed explicitly first.
   timeouts.forEach((timeout: number, i: number): void => {
     a.push(
-      collapsibleDelay(timeout, (values as (T | undefined)[])[i], a[i - 1])
+      collapsibleDelay(
+        timeout,
+        (values as (T | PromiseLike<T> | undefined)[])[i],
+        a[i - 1]
+      )
     );
   });
 
