@@ -3,16 +3,14 @@ import { ResolvableState } from "./resolution-state";
 
 export class TimeoutState<T> extends ResolvableState<T> {
   protected _timeoutId?: NodeJS.Timeout;
-  protected readonly _timeout: number;
 
-  public constructor(timeout: number) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public constructor(timeout: number, value: any) {
     super();
-
-    this._timeout = timeout;
 
     this._timeoutId = setTimeout((): void => {
       this._timeoutId = undefined;
-      this.resolve();
+      this.resolve(typeof value !== "function" ? value : value());
     }, timeout);
   }
 
