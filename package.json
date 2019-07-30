@@ -1,6 +1,6 @@
 {
   "name": "promise-plumber",
-  "version": "0.0.0",
+  "version": "0.1.0-0",
   "description": "Sandbox for complex promise constructs",
   "keywords": [
     "promise",
